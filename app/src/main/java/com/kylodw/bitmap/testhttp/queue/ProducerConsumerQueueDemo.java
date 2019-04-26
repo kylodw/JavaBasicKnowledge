@@ -22,6 +22,7 @@ public class ProducerConsumerQueueDemo {
 
         public SharedData(BlockingQueue<String> blockingQueue) {
             this.blockingQueue = blockingQueue;
+            System.out.println(blockingQueue.getClass().getName());
         }
 
     }

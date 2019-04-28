@@ -11,3 +11,9 @@
  - 5，绑定多个Condition
       synchronized  没有
      Lock 可以分组唤醒
+     
+##  死锁
+
+     > jps -l 查看进程编号
+     > jstack 22208 查看堆栈信息是否有死锁
+   

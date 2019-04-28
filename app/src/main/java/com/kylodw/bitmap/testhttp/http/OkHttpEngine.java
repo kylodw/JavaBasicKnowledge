@@ -3,13 +3,17 @@ package com.kylodw.bitmap.testhttp.http;
 import android.content.Context;
 import android.util.Log;
 
+import com.google.gson.Gson;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.Headers;
 import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -25,10 +29,18 @@ public class OkHttpEngine implements IHttpEngine {
 
     @Override
     public void get(Context context, String url, Map<String, String> mHeaders, Map<String, Object> params, final EngineCallBack engineCallBack) {
-        final String joinUrl = HttpUtils.joinParams(url, params);
-        Log.e("OkHttpEngine", joinUrl);
-        Request.Builder builder = new Request.Builder().url(url).tag(context);
+        String joinUrl = null;
+        if (params != null) {
+            joinUrl = HttpUtils.joinParams(url, params);
+            Log.e("OkHttpEngine", joinUrl);
+        } else {
+            joinUrl = url;
+        }
+        Request.Builder builder = new Request.Builder().url(joinUrl).tag(context);
         builder.method("GET", null);
+        for (Map.Entry<String, String> entry : mHeaders.entrySet()) {
+            builder.addHeader(entry.getKey(), entry.getValue());
+        }
         Request request = builder.build();
         okHttpClient.newCall(request).enqueue(new Callback() {
             @Override
@@ -52,8 +64,8 @@ public class OkHttpEngine implements IHttpEngine {
                 .tag(context)
                 .post(requestBody);
         if (mHeaders != null) {
-            for (Map.Entry<String, Object> entry : params.entrySet()) {
-                builder.addHeader(entry.getKey(), (String) entry.getValue());
+            for (Map.Entry<String, String> entry : mHeaders.entrySet()) {
+                builder.addHeader(entry.getKey(), entry.getValue());
             }
         }
         Request request = builder.build();
@@ -74,19 +86,26 @@ public class OkHttpEngine implements IHttpEngine {
     }
 
     private RequestBody appendBody(Map<String, Object> params) {
-        StringBuilder stringBuilder = new StringBuilder();
-
+        MultipartBody.Builder builder = new MultipartBody.Builder();
+//        Headers headers = null;
         for (Map.Entry<String, Object> entry : params.entrySet()) {
+//            headers=Headers.of(
+//                    "Content-Disposition", "form-data; name=\"" + entry.getKey() + "\"");
             if (entry.getValue() instanceof File) {
-
-            }
-            if (entry.getValue() instanceof String) {
-
+                Log.e("kylodw", "这是file" + entry.getValue());
+                builder.addPart(parseImageRequestBody((File) entry.getValue()));
+            } else if (entry.getValue() instanceof String) {
+                Log.e("kylodw", "这是String" + entry.getValue());
+                builder.addPart(parseRequestBody((String) entry.getValue()));
+            } else if (entry.getValue() instanceof Integer) {
+                builder.addPart(parseRequestBody((String) entry.getValue()));
+            } else {
+                builder.addPart(parseRequestBody((String) entry.getValue()));
             }
         }
-        String value = null;
-        return parseRequestBody(value);
+        return builder.build();
     }
+
 
     /**
      * body 文本格式
@@ -95,7 +114,7 @@ public class OkHttpEngine implements IHttpEngine {
      * @return
      */
     public static RequestBody parseRequestBody(String value) {
-        return RequestBody.create(MediaType.parse("text/plain"), value);
+        return RequestBody.create(MediaType.parse("application/json"), value);
     }
 
     /**

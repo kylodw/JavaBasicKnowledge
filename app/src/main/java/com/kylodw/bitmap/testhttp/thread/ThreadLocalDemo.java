@@ -1,5 +1,9 @@
 package com.kylodw.bitmap.testhttp.thread;
 
+import android.os.AsyncTask;
+
+import java.util.ArrayDeque;
+
 /**
  * @Author kylodw
  * @Description:
@@ -33,6 +37,34 @@ public class ThreadLocalDemo {
         thread1.join();
         thread2.join();
         System.out.println(threadLocal.get());
+
+        ArrayDeque<Runnable> runnables = new ArrayDeque<>();
+        runnables.offer(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        });
+        runnables.poll();
+        new Thread(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        AsyncTask asyncTask = new AsyncTask() {
+                            @Override
+                            protected Object doInBackground(Object[] objects) {
+                                return null;
+                            }
+                        };
+                    }
+                }
+        ).start();
+        AsyncTask asyncTask = new AsyncTask() {
+            @Override
+            protected Object doInBackground(Object[] objects) {
+                return null;
+            }
+        };
     }
 
 }

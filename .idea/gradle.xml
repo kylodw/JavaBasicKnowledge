@@ -15,6 +15,7 @@
             <option value="$PROJECT_DIR$/kylodw_annotations" />
             <option value="$PROJECT_DIR$/kylodw_pay" />
             <option value="$PROJECT_DIR$/kylodw_pay_compiler" />
+            <option value="$PROJECT_DIR$/write_handler" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

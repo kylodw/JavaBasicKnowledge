@@ -1,1 +1,1 @@
-include ':app', ':butterknife_annotations', ':butterknife_compiler', ':butterknife', ':kylodw_pay', ':kylodw_annotations', ':kylodw_pay_compiler'
+include ':app', ':butterknife_annotations', ':butterknife_compiler', ':butterknife', ':kylodw_pay', ':kylodw_annotations', ':kylodw_pay_compiler', ':write_handler'
